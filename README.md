@@ -1,4 +1,20 @@
 **Status:** Maintenance (expect bug fixes and minor updates)
+# Notes From this Repo:
+Ran into issues with the genesis (specifically Sonic) example after upgrading from 0.5.2,
+Moved to using super nintendo, was able to load up Super Metroid.
+
+````
+def save_state_to_file(env, name="test.state"):
+    
+    content = env.em.get_state()
+    with gzip.open(name, 'wb') as f:
+        f.write(content)
+````
+
+The General idea is to get your game to a certain state, then run the above function (naming it whatever you like)
+
+
+
 
 # Gym Retro
 
