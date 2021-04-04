@@ -1,5 +1,5 @@
 **Status:** Maintenance (expect bug fixes and minor updates)
-# Notes From this Repo:
+# Notes From TwitchAIRacingLeague:
 Ran into issues with the genesis (specifically Sonic) example after upgrading from 0.5.2,
 Moved to using super nintendo, was able to load up Super Metroid.
 
@@ -13,7 +13,10 @@ def save_state_to_file(env, name="test.state"):
 
 The General idea is to get your game to a certain state, then run the above function (naming it whatever you like)
 
+# Comversion
+From SMC to SFC, the tool expects sfc:
 
+https://smc2sfc2.herokuapp.com/
 
 
 # Gym Retro
