@@ -1,0 +1,32 @@
+{
+  "info": {
+    "hp": {
+      "address": 8260034,
+      "type": "|u1"
+    },
+    "room": {
+      "address": 8261054,
+      "type": "|u2"
+    },
+    "missiles": {
+      "address": 8261428,
+      "type": "|u1"
+    },
+    "supermissiles": {
+      "address": 8260038,
+      "type": "|u1"
+    },
+    "powerbombs": {
+      "address": 8260046,
+      "type": "|u1"
+    },
+    "lives": {
+      "address": 8260046,
+      "type": "|u1"
+    },
+    "score": {
+      "address": 8260046,
+      "type": "|u1"
+    }
+  }
+}
