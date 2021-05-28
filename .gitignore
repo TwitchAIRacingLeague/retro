@@ -9,6 +9,9 @@ __pycache__/
 *.dll
 *.o
 
+# ROMS
+*.sfc
+
 # Distribution / packaging
 .Python
 env/
