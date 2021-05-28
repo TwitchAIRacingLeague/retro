@@ -35,15 +35,14 @@ struct PyRetroEmulator {
 	Retro::Emulator m_re;
 	int m_cheats = 0;
 	PyRetroEmulator(const string& rom_path) {
-		if (Emulator::isLoaded()) {
-			throw std::runtime_error("Cannot create multiple emulator instances per process, make sure to call env.close() on each environment before creating a new one");
-		}
 		if (!m_re.loadRom(rom_path.c_str())) {
 			throw std::runtime_error("Could not load ROM");
 		}
 		m_re.run(); // otherwise you get a segfault when you try to get screen for the first time
 	}
-
+	void loadRom(const string& rom_path){
+		m_re.loadRom(rom_path.c_str());
+	}
 	void step() {
 		m_re.run();
 	}
@@ -86,6 +85,7 @@ struct PyRetroEmulator {
 		return arr;
 	}
 
+        
 	double getAudioRate() {
 		return m_re.getAudioRate();
 	}
@@ -467,6 +467,7 @@ PYBIND11_MODULE(_retro, m) {
 		.def("step", &PyRetroEmulator::step)
 		.def("set_button_mask", &PyRetroEmulator::setButtonMask, py::arg("mask"), py::arg("player") = 0)
 		.def("get_state", &PyRetroEmulator::getState)
+    	.def("loadRom", &PyRetroEmulator::loadRom)
 		.def("set_state", &PyRetroEmulator::setState)
 		.def("get_screen", &PyRetroEmulator::getScreen)
 		.def("get_screen_rate", &PyRetroEmulator::getScreenRate)

@@ -58,6 +58,7 @@ Emulator::Emulator() {
 }
 
 Emulator::~Emulator() {
+        cout << "Destructor Called\n";
 	if (m_corePath) {
 		free(m_corePath);
 	}
@@ -82,10 +83,14 @@ bool Emulator::loadRom(const string& romPath) {
 	if (core.size() == 0) {
 		return false;
 	}
-
+        cout << core << "\n";
+        cout << m_coreHandle << "\n";
 	if (m_coreHandle && m_core != core) {
+                cout << "Unloading Core\n";
 		unloadCore();
 	}
+       cout << m_coreHandle << "\n";
+
 	if (!m_coreHandle) {
 		string lib = libForCore(core) + "_libretro.";
 #ifdef __APPLE__
@@ -99,16 +104,20 @@ bool Emulator::loadRom(const string& romPath) {
 			return false;
 		}
 		m_core = core;
+		
 	}
-
+        cout << m_coreHandle << "\n";
 	retro_game_info gameInfo;
 	ifstream in(romPath, ios::binary | ios::ate);
 	if (in.fail()) {
+		cout << "Game Info\n";
 		return false;
 	}
+
 	ostringstream out;
 	gameInfo.size = in.tellg();
 	if (in.fail()) {
+		cout << "Game Size\n";
 		return false;
 	}
 	char* romData = new char[gameInfo.size];
@@ -118,6 +127,7 @@ bool Emulator::loadRom(const string& romPath) {
 	in.read(romData, gameInfo.size);
 	if (in.fail()) {
 		delete[] romData;
+		cout << "IN failed\n";
 		return false;
 	}
 	in.close();
@@ -125,6 +135,7 @@ bool Emulator::loadRom(const string& romPath) {
 	auto res = retro_load_game(&gameInfo);
 	delete[] romData;
 	if (!res) {
+		cout << "Load Game Failed\n";
 		return false;
 	}
 	retro_get_system_av_info(&m_avInfo);

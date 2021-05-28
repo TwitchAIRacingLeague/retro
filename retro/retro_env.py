@@ -84,6 +84,8 @@ class RetroEnv(gym.Env):
         # We can't have more than one emulator per process. Before creating an
         # emulator, ensure that unused ones are garbage-collected
         gc.collect()
+        print ("GARBAGE COLLECT?")
+        # Ideally we would create one retro emulator instance and then we could just load roms, but I haven't sorted that out yet
         self.em = retro.RetroEmulator(rom_path)
         self.em.configure_data(self.data)
         self.em.step()
@@ -135,6 +137,37 @@ class RetroEnv(gym.Env):
             self._reset = self.reset
             self._render = self.render
             self._close = self.close
+
+    def loadRom(self, game):
+        # This successfully loads a rom, however it doesn't jump to the "start" state as defined in the json file.
+        metadata = {}
+        rom = retro.data.get_romfile_path(game, retro.data.Integrations.STABLE)
+        metadata_path = retro.data.get_file_path(game, 'metadata.json', retro.data.Integrations.STABLE)
+
+        try:
+            with open(metadata_path) as f:
+                metadata = json.load(f)
+            if 'default_player_state' in metadata and self.players <= len(metadata['default_player_state']):
+                self.statename = metadata['default_player_state'][self.players - 1]
+            elif 'default_state' in metadata:
+                self.statename = metadata['default_state']
+            else:
+                self.statename = None
+        except (IOError, json.JSONDecodeError):
+            pass
+
+        self.gamename = game
+        if self.statename:
+            self.load_state(self.statename, retro.data.Integrations.STABLE)
+        
+        self.em.loadRom(rom)
+
+        #self.em.configure_data(self.data)
+        #self.em.step()
+
+        self.reset()
+        obs, rew, done, info = self.step([0,0,0,0,0,0,0,0,0,0,0,0])
+
 
     def _update_obs(self):
         if self._obs_type == retro.Observations.RAM:
@@ -193,6 +226,7 @@ class RetroEnv(gym.Env):
     def reset(self):
         if self.initial_state:
             self.em.set_state(self.initial_state)
+
         for p in range(self.players):
             self.em.set_button_mask(np.zeros([self.num_buttons], np.uint8), p)
         self.em.step()
