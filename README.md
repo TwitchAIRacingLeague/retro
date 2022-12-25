@@ -13,7 +13,7 @@ def save_state_to_file(env, name="test.state"):
 
 The General idea is to get your game to a certain state, then run the above function (naming it whatever you like)
 
-# Comversion
+# Conversion
 From SMC to SFC, the tool expects sfc:
 
 https://smc2sfc2.herokuapp.com/
