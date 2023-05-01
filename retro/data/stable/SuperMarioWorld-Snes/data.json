@@ -8,6 +8,10 @@
       "address": 8261054,
       "type": "|i1"
     },
+    "level": {
+      "address": 8262591,
+      "type": "|i1"
+    },
     "score": {
       "address": 8261428,
       "type": "<u4"
