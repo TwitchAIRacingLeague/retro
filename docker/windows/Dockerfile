@@ -1,4 +1,4 @@
-FROM ubuntu:xenial
+FROM ubuntu:bionic
 
 SHELL ["/bin/bash", "-c"]
 ARG ARCH=x86_64
