@@ -5,6 +5,7 @@ FROM ubuntu:22.04
 ARG DEBIAN_FRONTEND=noninteractive 
 
 
+WORKDIR /root
 
 RUN apt-get update -y && apt-get install -y \
     git \
@@ -49,15 +50,16 @@ RUN CROSS=win${BITS} ROOT=/usr/${ARCH}-w64-mingw32 ./scripts/build_libzip.sh && 
     rm -rf libzip
 
 
+WORKDIR /root/stable-retro
 
-#RUN python3 -m pip install --upgrade pip wheel setuptools
+RUN python3 -m pip install --upgrade pip wheel setuptools
 
 #RUN python3 -m pip install -e .
 
-#RUN cmake . -DBUILD_TESTS=ON -DBUILD_MANYLINUX=ON -DPYTHON_INCLUDE_DIR=/usr/include/python3.10 -DCMAKE_TOOLCHAIN_FILE=/root/cmake/win64.cmake
+RUN cmake . -DBUILD_TESTS=ON -DBUILD_MANYLINUX=ON -DPYTHON_INCLUDE_DIR=/usr/include/python3.10 -DCMAKE_TOOLCHAIN_FILE=../cmake/win64.cmake
 
-#RUN python3 setup.py -q build_ext -i -j3
+RUN python3 setup.py -q build_ext -i -j3
 
-#RUN make -j3
+RUN make -j3
 
-#RUN python3 setup.py bdist_wheel
+RUN python3 setup.py bdist_wheel
