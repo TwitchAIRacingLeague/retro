@@ -286,6 +286,37 @@ class RetroEnv(gym.Env):
             self._render = self.render
             self._close = self.close
 
+
+    def loadRom(env, game):
+        # This successfully loads a rom, however it doesn't jump to the "start" state as defined in the json file.
+        metadata = {}
+        rom = retro.data.get_romfile_path(game, retro.data.Integrations.STABLE)
+        metadata_path = retro.data.get_file_path(game, 'metadata.json', retro.data.Integrations.STABLE)
+
+        try:
+            with open(metadata_path) as f:
+                metadata = json.load(f)
+            if 'default_player_state' in metadata and env.players <= len(metadata['default_player_state']):
+                env.statename = metadata['default_player_state'][env.players - 1]
+            elif 'default_state' in metadata:
+                env.statename = metadata['default_state']
+            else:
+                env.statename = None
+        except (IOError, json.JSONDecodeError):
+            pass
+
+        env.gamename = game
+        if env.statename:
+            env.load_state(env.statename, retro.data.Integrations.STABLE)
+
+        env.em.loadRom(rom)
+
+        #env.em.configure_data(env.data)
+        #env.em.step()
+
+        env.reset()
+        obs, rew, done, info = env.step([0,0,0,0,0,0,0,0,0,0,0,0])
+        return obs, rew, done, info
     def _update_obs(self):
         if self._obs_type == retro.Observations.RAM:
             self.ram = self.get_ram()

@@ -1,0 +1,65 @@
+{
+  "info": {
+    "hp": {
+      "address": 8260034,
+      "type": "|u2"
+    },
+    "reserves": {
+      "address": 8260054,
+      "type": "|u2"
+    },
+    "room": {
+      "address": 8259483,
+      "type": "|u2"
+    },
+    "missiles": {
+      "address": 8261428,
+      "type": "|u2"
+    },
+    "supermissiles": {
+      "address": 8260038,
+      "type": "|u2"
+    },
+    "powerbombs": {
+      "address": 8260046,
+      "type": "|u2"
+    },
+    "collecteditems": {
+      "address": 8260004,
+      "type": "|u2"
+    },
+    "equippeditems": {
+      "address": 8260002,
+      "type": "|u2"
+    },
+    "equippedbeams": {
+      "address": 8260006,
+      "type": "|u1"
+    },
+    "equippedchargebeam": {
+      "address": 8260007,
+      "type": "|u1"
+    },
+    "collectedbeams": {
+      "address": 8260008,
+      "type": "|u1"
+    },
+    "collectedchargebeam": {
+      "address": 8260009,
+      "type": "|u1"
+    },
+    "activeselection": {
+      "address": 8260050,
+      "type": "|u2"
+    },
+    "score": {
+      "address": 8260046,
+      "type": "|u1"
+    },
+    "lives": {
+      "address": 8260034,
+      "type": "|u1"
+    }
+
+  }
+}
