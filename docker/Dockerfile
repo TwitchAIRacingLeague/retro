@@ -44,7 +44,7 @@ ARG ARCH=x86_64
 ARG BITS=64
 ENV PYVER=3.10
 
-RUN CROSS=win${BITS} ROOT=/usr/${ARCH}-w64-mingw32 ./scripts/install_python.sh
+RUN CROSS=win${BITS} ROOT=/usr/${ARCH}-w64-mingw32 ./scripts/install_python.sh # Requires update to include python 3 10 6
 
 RUN CROSS=win${BITS} ROOT=/usr/${ARCH}-w64-mingw32 ./scripts/build_libzip.sh && \
     rm -rf libzip
@@ -62,4 +62,4 @@ RUN python3 setup.py -q build_ext -i -j3
 
 RUN make -j3
 
-RUN python3 setup.py bdist_wheel
+RUN python3 setup.py bdist_wheel --plat-name win_amd64
