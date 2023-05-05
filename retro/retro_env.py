@@ -207,23 +207,7 @@ class RetroEnv(gym.Env):
                 pass
 
         if self.statename:
-            self.load_state(self.statename, inttype)        if info is None:
-            info = 'data'
-
-        if info.endswith('.json'):
-            # assume it's a path
-            info_path = info
-        else:
-            info_path = retro.data.get_file_path(game, info + '.json', inttype)
-
-        if scenario is None:
-            scenario = 'scenario'
-
-        if scenario.endswith('.json'):
-            # assume it's a path
-            scenario_path = scenario
-        else:
-            scenario_path = retro.data.get_file_path(game, scenario + '.json', 
+            self.load_state(self.statename, inttype)
 
         self.data = retro.data.GameData()
 
@@ -303,21 +287,22 @@ class RetroEnv(gym.Env):
             self._close = self.close
 
 
-    def loadRom(env, game):
+    def loadRom(self, game, state=retro.State.DEFAULT, inttype=retro.data.Integrations.STABLE):
         # This successfully loads a rom, however it doesn't jump to the "start" state as defined in the json file.
         metadata = {}
         rom = retro.data.get_romfile_path(game, retro.data.Integrations.STABLE)
         metadata_path = retro.data.get_file_path(game, 'metadata.json', retro.data.Integrations.STABLE)
+        self.statename = state
 
         try:
             with open(metadata_path) as f:
                 metadata = json.load(f)
-            if 'default_player_state' in metadata and env.players <= len(metadata['default_player_state']):
-                env.statename = metadata['default_player_state'][env.players - 1]
+            if 'default_player_state' in metadata and self.players <= len(metadata['default_player_state']):
+                self.statename = metadata['default_player_state'][self.players - 1]
             elif 'default_state' in metadata:
-                env.statename = metadata['default_state']
+                self.statename = metadata['default_state']
             else:
-                env.statename = None
+                self.statename = None
         except (IOError, json.JSONDecodeError):
             pass
 
@@ -334,17 +319,19 @@ class RetroEnv(gym.Env):
             del self.em
             raise
 
-        env.gamename = game
-        if env.statename:
-            env.load_state(env.statename, retro.data.Integrations.STABLE)
+        self.gamename = game
 
-        env.em.loadRom(rom)
+        if self.statename:
+            print ("Loading State")
+            self.load_state(self.statename, inttype)
 
-        #env.em.configure_data(env.data)
-        #env.em.step()
+        self.em.loadRom(rom)
 
-        env.reset()
-        obs, rew, done, info = env.step([0,0,0,0,0,0,0,0,0,0,0,0])
+        #self.em.configure_data(self.data)
+        #self.em.step()
+
+        self.reset()
+        obs, rew, done, info = self.step([0,0,0,0,0,0,0,0,0,0,0,0])
         return obs, rew, done, info
 
 
