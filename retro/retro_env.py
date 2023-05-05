@@ -207,7 +207,23 @@ class RetroEnv(gym.Env):
                 pass
 
         if self.statename:
-            self.load_state(self.statename, inttype)
+            self.load_state(self.statename, inttype)        if info is None:
+            info = 'data'
+
+        if info.endswith('.json'):
+            # assume it's a path
+            info_path = info
+        else:
+            info_path = retro.data.get_file_path(game, info + '.json', inttype)
+
+        if scenario is None:
+            scenario = 'scenario'
+
+        if scenario.endswith('.json'):
+            # assume it's a path
+            scenario_path = scenario
+        else:
+            scenario_path = retro.data.get_file_path(game, scenario + '.json', 
 
         self.data = retro.data.GameData()
 
@@ -305,6 +321,19 @@ class RetroEnv(gym.Env):
         except (IOError, json.JSONDecodeError):
             pass
 
+        # The ordering could be totally wonky, I have no idea if this is right
+        # Force re-loading the data and scenario .json files, also assume that the info file is "data" and scenario is scenario
+        info = "data"
+        info_path = retro.data.get_file_path(game, info + '.json', inttype)
+        scenario = 'scenario'
+        scenario_path = retro.data.get_file_path(game, scenario + '.json', inttype)
+
+        try:
+            assert self.data.load(info_path, scenario_path), 'Failed to load info (%s) or scenario (%s)' % (info_path, scenario_path)
+        except Exception:
+            del self.em
+            raise
+
         env.gamename = game
         if env.statename:
             env.load_state(env.statename, retro.data.Integrations.STABLE)
@@ -317,6 +346,8 @@ class RetroEnv(gym.Env):
         env.reset()
         obs, rew, done, info = env.step([0,0,0,0,0,0,0,0,0,0,0,0])
         return obs, rew, done, info
+
+
     def _update_obs(self):
         if self._obs_type == retro.Observations.RAM:
             self.ram = self.get_ram()
