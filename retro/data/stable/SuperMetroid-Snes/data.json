@@ -13,12 +13,12 @@
       "type": "|u2"
     },
     "missiles": {
-      "address": 8261428,
-      "type": "|u2"
-    },
-    "supermissiles": {
       "address": 8260038,
       "type": "|u2"
+    },
+    "max_missiles" : {
+      "address" : 8260040,
+      "type" : "|u2"
     },
     "powerbombs": {
       "address": 8260046,
